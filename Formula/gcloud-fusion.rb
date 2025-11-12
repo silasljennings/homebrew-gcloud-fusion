@@ -1,10 +1,10 @@
  class GcloudFusion < Formula
     desc "CLI shortcuts for Google Cloud Platform, Firebase, and GitHub operations"
     homepage "https://gcloud-fusion.devdeviants.com"
-    url "https://github.com/silasljennings/gcloud-fusion/releases/download/v1.0.0/cli-v1.0.0.tar.gz"
-    sha256 "PLACEHOLDER_SHA256"
+    url "https://github.com/silasljennings/gcloud-fusion/releases/download/v1.1.0/cli-v1.1.0.tar.gz"
+    sha256 "0019dfc4b32d63c1392aa264aed2253c1e0c2fb09216f8e2cc269bbfb8bb49b5"
     license "MIT"
-    version "1.0.0"
+    version "1.1.0"
 
     depends_on "node"
     depends_on "gh"
