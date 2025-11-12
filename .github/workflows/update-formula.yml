@@ -1,69 +1,69 @@
 name: Update Formula
-  on:
-    repository_dispatch:
-      types: [ update-formula ]
+on:
+  repository_dispatch:
+    types: [ update-formula ]
 
-  jobs:
-    update:
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v4
-          with:
-            token: ${{ secrets.WORKFLOW_TOKEN }}
-            persist-credentials: true
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.WORKFLOW_TOKEN }}
+          persist-credentials: true
 
-        - name: Update formula
-          run: |
-            version="${{ github.event.client_payload.version }}"
-            sha256="${{ github.event.client_payload.sha256 }}"
-            url="${{ github.event.client_payload.url }}"
-            force_update="${{ github.event.client_payload.force_update }}"
+      - name: Update formula
+        run: |
+          version="${{ github.event.client_payload.version }}"
+          sha256="${{ github.event.client_payload.sha256 }}"
+          url="${{ github.event.client_payload.url }}"
+          force_update="${{ github.event.client_payload.force_update }}"
 
-            echo "📝 Updating formula with:"
-            echo "   Version: $version"
-            echo "   URL: $url"
-            echo "   SHA256: $sha256"
-            echo "   Force update: $force_update"
+          echo "📝 Updating formula with:"
+          echo "   Version: $version"
+          echo "   URL: $url"
+          echo "   SHA256: $sha256"
+          echo "   Force update: $force_update"
 
-            # Update the formula file
-            sed -i "s/version \".*\"/version \"$version\"/" Formula/gcloud-fusion.rb
-            sed -i "s|url \".*\"|url \"$url\"|" Formula/gcloud-fusion.rb
-            sed -i "s/sha256 \".*\"/sha256 \"$sha256\"/" Formula/gcloud-fusion.rb
+          # Update the formula file
+          sed -i "s/version \".*\"/version \"$version\"/" Formula/gcloud-fusion.rb
+          sed -i "s|url \".*\"|url \"$url\"|" Formula/gcloud-fusion.rb
+          sed -i "s/sha256 \".*\"/sha256 \"$sha256\"/" Formula/gcloud-fusion.rb
 
-            echo "✅ Formula updated successfully"
+          echo "✅ Formula updated successfully"
 
-        - name: Configure git and commit changes
-          env:
-            WORKFLOW_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
-          run: |
-            version="${{ github.event.client_payload.version }}"
+      - name: Configure git and commit changes
+        env:
+          WORKFLOW_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
+        run: |
+          version="${{ github.event.client_payload.version }}"
 
-            git config user.name "github-actions[bot]"
-            git config user.email "github-actions[bot]@users.noreply.github.com"
-            git add Formula/gcloud-fusion.rb
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add Formula/gcloud-fusion.rb
 
-            # Check if there are changes to commit
-            if git diff --staged --quiet; then
-              echo "ℹ️ No changes to commit (formula already up to date)"
-              exit 0
-            fi
+          # Check if there are changes to commit
+          if git diff --staged --quiet; then
+            echo "ℹ️ No changes to commit (formula already up to date)"
+            exit 0
+          fi
 
-            git commit -m "Update gcloud-fusion to v$version"
-            git push origin main
+          git commit -m "Update gcloud-fusion to v$version"
+          git push origin main
 
-            echo "✅ Formula updated and pushed to repository"
+          echo "✅ Formula updated and pushed to repository"
 
-        - name: Summary
-          run: |
-            version="${{ github.event.client_payload.version }}"
-            url="${{ github.event.client_payload.url }}"
+      - name: Summary
+        run: |
+          version="${{ github.event.client_payload.version }}"
+          url="${{ github.event.client_payload.url }}"
 
-            echo "🎉 Formula update completed!"
-            echo ""
-            echo "📋 Details:"
-            echo "   Version: $version"
-            echo "   URL: $url"
-            echo ""
-            echo "🧪 Users can now install with:"
-            echo "   brew tap silasljennings/gcloud-fusion"
-            echo "   brew install gcloud-fusion"
+          echo "🎉 Formula update completed!"
+          echo ""
+          echo "📋 Details:"
+          echo "   Version: $version"
+          echo "   URL: $url"
+          echo ""
+          echo "🧪 Users can now install with:"
+          echo "   brew tap silasljennings/gcloud-fusion"
+          echo "   brew install gcloud-fusion"
